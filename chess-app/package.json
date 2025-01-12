@@ -1,0 +1,25 @@
+{
+  "name": "chess-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@angular/cli": "^19.0.7",
+    "@types/node": "^22.10.5",
+    "typescript": "^5.7.3",
+    "autoprefixer": "^10.4.14",                                                                                                                                                                                                               
+    "postcss": "^8.4.24"                                                                                                                                                                                                 
+  },                                                                                                                                
+                                                                                                                                        
+  "dependencies": {                                                                                                                 
+                                                                                                                                    
+    "chess.js": "^1.0.0"                                                                                                            
+                                                                                                                                    
+  }  
+}
