@@ -62,7 +62,7 @@ export class ChessboardComponent implements OnInit {
     this.possibleMoves = this.chessService.getPossibleMoves(this.game, square.row, square.col);
     this.draggedPiece = event.target as HTMLElement;
     this.initialPosition = { x: event.clientX, y: event.clientY };
-    this.initialPiecePosition = {left: this.draggedPiece.style.left, top: this.draggedPiece.style.top};
+    this.initialPiecePosition = { left: this.draggedPiece.style.left, top: this.draggedPiece.style.top };
     this.draggedPiece.style.position = 'absolute';
     this.draggedPiece.style.zIndex = '10';
   }
@@ -114,12 +114,12 @@ export class ChessboardComponent implements OnInit {
     this.dragging = false;
     this.selectedPiece = null;
     this.possibleMoves = [];
-    if (this.draggedPiece) { // Add null check here
+    if (this.draggedPiece) {
       this.draggedPiece.style.position = 'relative';
       this.draggedPiece.style.zIndex = '0';
       this.draggedPiece.style.left = '0';
       this.draggedPiece.style.top = '0';
     }
-    this.draggedPiece = null; //Added this line to explicitly set draggedPiece to null
+    this.draggedPiece = null;
   }
 }
