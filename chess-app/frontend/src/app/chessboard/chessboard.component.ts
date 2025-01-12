@@ -1,57 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import * as ChessJS from 'chess.js';
+// ... other imports ...
 
 @Component({
-  selector: 'app-chessboard',
-  templateUrl: './chessboard.component.html',
-  styles: [`
-    .square {
-      width: 50px;
-      height: 50px;
-      text-align: center;
-      border: 1px solid black;
-    }
-    .white {
-      background-color: #f0d9b5;
-    }
-    .black {
-      background-color: #b58863;
-    }
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  `],
-  standalone: true,
-  imports: [CommonModule]
+  // ... other component metadata ...
 })
 export class ChessboardComponent implements OnInit {
-  game: ChessJS.Chess = new ChessJS.Chess();
-  board: string[][] = [];
-
-  ngOnInit(): void {
-    this.updateBoard();
-    console.log(this.board);
-  }
-
-  updateBoard() {
-    this.board = [];
-    for (let i = 0; i < 8; i++) {
-      const row = [];
-      for (let j = 0; j < 8; j++) {
-        const square = ChessJS.SQUARES[8 * i + j];
-        const piece = this.game.get(square);
-        row.push(piece ? piece.type + piece.color[0] : '');
-      }
-      this.board.push(row);
-    }
-  }
+  // ... other component properties and methods ...
 
   getPieceImage(piece: string): string {
     const color = piece[1];
-    const type = piece[0];
-    const typeUppercase = type.toUpperCase();
-    return `/src/app/chessboard/img/chesspieces/${color}${typeUppercase}.png`;
+    const type = piece[0].toUpperCase(); // Ensure uppercase for consistency
+    return `/assets/img/chesspieces/${color}${type}.png`;
   }
 }
