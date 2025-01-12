@@ -23,7 +23,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/app/chessboard/img/chesspieces" // Add this line
+              "src/app/chessboard/img/chesspieces" 
             ],
             "styles": [
               "src/styles.css"
@@ -56,8 +56,7 @@
             }
           },
           "defaultConfiguration": "production"
-        },
-        // ... rest of your angular.json file ...
+        }
       }
     }
   }

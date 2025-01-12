@@ -1,4 +1,4 @@
-import { Component, standalone } from '@angular/core';
+import { Component } from '@angular/core';
 import { ChessboardComponent } from './chessboard/chessboard.component';
 
 @Component({
