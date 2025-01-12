@@ -6,11 +6,11 @@ import { ChessboardComponent } from './chessboard/chessboard.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    ChessboardComponent // Ensure ChessboardComponent is declared here
+    AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    ChessboardComponent // Import ChessboardComponent here
   ],
   providers: [],
   bootstrap: [AppComponent]
