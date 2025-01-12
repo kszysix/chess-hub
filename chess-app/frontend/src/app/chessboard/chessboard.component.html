@@ -1,13 +1,13 @@
-<div #board>
-<table>
-  <tr *ngFor="let row of board; let i = index">
-    <td *ngFor="let piece of row; let j = index"
-        [class.white]="(i + j) % 2 === 0"
-        [class.black]="(i + j) % 2 !== 0"
-        class="square"
-        (click)="onPieceClick(i, j, piece)">
-      <img *ngIf="piece" [src]="getPieceImage(piece)" alt="{{ piece }}">
-    </td>
-  </tr>
-</table>
+<div #board class="board">
+  <table>
+    <tr *ngFor="let row of board; let i = index">
+      <td *ngFor="let piece of row; let j = index"
+          [class.white]="(i + j) % 2 === 0"
+          [class.black]="(i + j) % 2 !== 0"
+          class="square"
+          (mousedown)="onPieceMouseDown($event, i, j, piece)">
+        <img *ngIf="piece" [src]="getPieceImage(piece)" alt="{{ piece }}">
+      </td>
+    </tr>
+  </table>
 </div>
