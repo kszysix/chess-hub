@@ -11,7 +11,7 @@ import { ChessService } from '../services/chess.service';
   styleUrls: ['./chessboard.component.css']
 })
 export class ChessboardComponent implements OnInit {
-  @ViewChild('board') boardContainer!: ElementRef;
+  @ViewChild('boardCss') boardContainer!: ElementRef;
 
   game: ChessJS.Chess = new ChessJS.Chess();
   board: string[][] = [];

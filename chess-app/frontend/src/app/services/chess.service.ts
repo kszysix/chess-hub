@@ -4,7 +4,7 @@ import * as ChessJS from 'chess.js';
 @Injectable({ providedIn: 'root' })
 export class ChessService {
   getPossibleMoves(game: ChessJS.Chess, row: number, col: number): { row: number; col: number }[] {
-    const algebraicNotation = this.getAlgebraicNotation(row, col);
+    const algebraicNotation = this.getAlgebraicNotation(row, col) as ChessJS.Square;
     const moves = game.moves({ square: algebraicNotation, verbose: true });
     return moves.map(move => ({
       row: 8 - parseInt(move.to.slice(1)),
