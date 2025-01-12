@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as ChessJS from 'chess.js';
 import { ChessService } from '../services/chess.service';
@@ -10,6 +10,8 @@ import { ChessService } from '../services/chess.service';
   imports: [CommonModule],
 })
 export class ChessboardComponent implements OnInit {
+  @ViewChild('board') boardContainer!: ElementRef;
+
   game: ChessJS.Chess = new ChessJS.Chess();
   board: { row: number; col: number; piece: string }[] = [];
   selectedPiece: { row: number; col: number; piece: string } | null = null;
@@ -17,11 +19,16 @@ export class ChessboardComponent implements OnInit {
   dragging: boolean = false;
   draggedPiece: HTMLElement | null = null;
   initialPosition: { x: number; y: number } | null = null;
+  squareSize: number = 0;
 
   constructor(private chessService: ChessService) {}
 
   ngOnInit(): void {
     this.updateBoard();
+  }
+
+  ngAfterViewInit() {
+    this.squareSize = this.boardContainer.nativeElement.offsetWidth / 8;
   }
 
   updateBoard() {
@@ -82,17 +89,14 @@ export class ChessboardComponent implements OnInit {
   }
 
   findSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
-    // Implement logic to find the square based on coordinates.  This will depend on your board layout and size.
-    // This is a placeholder, replace with your actual logic.
-    const squareSize = 64 / 8; // Assuming 64px board
-    const col = Math.floor(x / squareSize);
-    const row = Math.floor(y / squareSize);
+    const boardRect = this.boardContainer.nativeElement.getBoundingClientRect();
+    const col = Math.floor((x - boardRect.left) / this.squareSize);
+    const row = Math.floor((y - boardRect.top) / this.squareSize);
     if (col >= 0 && col < 8 && row >= 0 && row < 8) {
       return { row, col };
     }
     return null;
   }
-
 
   getAlgebraicNotation(row: number, col: number): string {
     const colName = String.fromCharCode(97 + col);
