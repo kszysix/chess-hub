@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule } from '@angular/common';
 import * as ChessJS from 'chess.js';
 
 @Component({
@@ -10,8 +10,6 @@ import * as ChessJS from 'chess.js';
       width: 50px;
       height: 50px;
       text-align: center;
-      font-size: 30px;
-      line-height: 50px;
       border: 1px solid black;
     }
     .white {
@@ -20,9 +18,13 @@ import * as ChessJS from 'chess.js';
     .black {
       background-color: #b58863;
     }
+    img {
+      width: 100%;
+      height: 100%;
+    }
   `],
   standalone: true,
-  imports: [CommonModule] // Add CommonModule to imports
+  imports: [CommonModule]
 })
 export class ChessboardComponent implements OnInit {
   game: ChessJS.Chess = new ChessJS.Chess();
@@ -43,5 +45,20 @@ export class ChessboardComponent implements OnInit {
       }
       this.board.push(row);
     }
+  }
+
+  getPieceImage(piece: string): string {
+    const color = piece[1];
+    const type = piece[0];
+    let imageName = '';
+    switch (type) {
+      case 'K': imageName = 'king'; break;
+      case 'Q': imageName = 'queen'; break;
+      case 'R': imageName = 'rook'; break;
+      case 'B': imageName = 'bishop'; break;
+      case 'N': imageName = 'knight'; break;
+      case 'P': imageName = 'pawn'; break;
+    }
+    return `/assets/img/chesspieces/${color}${imageName}.png`;
   }
 }

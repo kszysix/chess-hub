@@ -4,7 +4,7 @@
         [class.white]="(i + j) % 2 === 0"
         [class.black]="(i + j) % 2 !== 0"
         class="square">
-      {{ piece }}
+      <img *ngIf="piece" [src]="getPieceImage(piece)" alt="{{ piece }}">
     </td>
   </tr>
 </table>
