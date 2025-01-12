@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, standalone } from '@angular/core';
+import { ChessboardComponent } from './chessboard/chessboard.component';
 
 @Component({
   selector: 'app-root',
-  imports: [],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true, // Add standalone: true
+  imports: [ChessboardComponent] //Import ChessboardComponent here
 })
 export class AppComponent {
   title = 'frontend';
