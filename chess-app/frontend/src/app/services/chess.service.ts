@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Chess } from 'chess.js';
+import * as ChessJS from 'chess.js';
 
 @Injectable({ providedIn: 'root' })
 export class ChessService {
-  getPossibleMoves(game: Chess, row: number, col: number): { row: number; col: number }[] {
-    const algebraicNotation = this.getAlgebraicNotation(row, col);
-    const moves = game.moves({ square: algebraicNotation, verbose: true });
+  getPossibleMoves(game: ChessJS.Chess, row: number, col: number): { row: number; col: number }[] {
+    const algebraicNotation = this.getAlgebraicNotation(row, col) as ChessJS.Square;
+    const moves: ChessJS.Move[] = game.moves({verbose: true,  square: algebraicNotation });
     return moves.map(move => ({
       row: 8 - parseInt(move.to.slice(1)),
       col: move.to.charCodeAt(0) - 97
