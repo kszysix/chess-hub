@@ -1,0 +1,10 @@
+<table>
+  <tr *ngFor="let row of board; let i = index">
+    <td *ngFor="let piece of row; let j = index"
+        [class.white]="(i + j) % 2 === 0"
+        [class.black]="(i + j) % 2 !== 0"
+        class="square">
+      {{ piece }}
+    </td>
+  </tr>
+</table>
