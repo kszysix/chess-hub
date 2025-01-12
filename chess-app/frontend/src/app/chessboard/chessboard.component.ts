@@ -10,7 +10,7 @@ import { ChessService } from '../services/chess.service';
   imports: [CommonModule],
 })
 export class ChessboardComponent implements OnInit {
-  @ViewChild('board') boardContainer!: ElementRef;
+  @ViewChild('boardCss') boardContainer!: ElementRef;
 
   game: ChessJS.Chess = new ChessJS.Chess();
   board: { row: number; col: number; piece: string }[] = [];

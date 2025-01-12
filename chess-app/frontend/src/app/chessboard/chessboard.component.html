@@ -1,4 +1,4 @@
-<div class="board" #board>
+<div class="board" #boardCss>
   <div class="grid grid-cols-8 grid-rows-8 gap-0 w-64 h-64">
     <div *ngFor="let square of board; let i = index"
          [class.bg-yellow-200]="(square.row + square.col) % 2 === 0"
