@@ -32,6 +32,7 @@ export class ChessboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.updateBoard();
+    console.log(this.board);
   }
 
   updateBoard() {
@@ -50,15 +51,7 @@ export class ChessboardComponent implements OnInit {
   getPieceImage(piece: string): string {
     const color = piece[1];
     const type = piece[0];
-    let imageName = '';
-    switch (type) {
-      case 'K': imageName = 'king'; break;
-      case 'Q': imageName = 'queen'; break;
-      case 'R': imageName = 'rook'; break;
-      case 'B': imageName = 'bishop'; break;
-      case 'N': imageName = 'knight'; break;
-      case 'P': imageName = 'pawn'; break;
-    }
-    return `/assets/img/chesspieces/${color}${imageName}.png`;
+    const typeUppercase = type.toUpperCase();
+    return `/src/app/chessboard/img/chesspieces/${color}${typeUppercase}.png`;
   }
 }
