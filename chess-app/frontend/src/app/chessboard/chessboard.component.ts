@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as ChessJS from 'chess.js';
 import { ChessService } from '../services/chess.service';
@@ -8,20 +8,15 @@ import { ChessService } from '../services/chess.service';
   templateUrl: './chessboard.component.html',
   standalone: true,
   imports: [CommonModule],
-  // styleUrls: ['./chessboard.component.css']  <- Removed because we're using Tailwind
 })
 export class ChessboardComponent implements OnInit {
-  // @ViewChild('boardCss') boardContainer!: ElementRef; <- Removed because we're not using this anymore
-
   game: ChessJS.Chess = new ChessJS.Chess();
-  board: string[][] = [];
+  board: { row: number; col: number; piece: string }[] = [];
   selectedPiece: { row: number; col: number; piece: string } | null = null;
   possibleMoves: { row: number; col: number }[] = [];
   dragging: boolean = false;
   draggedPiece: HTMLElement | null = null;
   initialPosition: { x: number; y: number } | null = null;
-  squareSize: number = 0;
-
 
   constructor(private chessService: ChessService) {}
 
@@ -29,12 +24,15 @@ export class ChessboardComponent implements OnInit {
     this.updateBoard();
   }
 
-  // ngAfterViewInit() { <- Removed because we're not using this anymore
-  //   this.squareSize = this.boardContainer.nativeElement.offsetWidth / 8;
-  // }
-
   updateBoard() {
-    this.board = this.game.board().map(row => row.map(piece => this.getPieceCode(piece)));
+    this.board = [];
+    const gameBoard = this.game.board();
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        const piece = gameBoard[i][j];
+        this.board.push({ row: i, col: j, piece: this.getPieceCode(piece) });
+      }
+    }
     this.possibleMoves = [];
   }
 
@@ -49,10 +47,10 @@ export class ChessboardComponent implements OnInit {
     return `assets/img/chesspiece/${color}${type}.png`;
   }
 
-  onPieceMouseDown(event: MouseEvent, row: number, col: number, piece: string) {
+  onPieceMouseDown(event: MouseEvent, square: { row: number; col: number; piece: string }) {
     this.dragging = true;
-    this.selectedPiece = { row, col, piece };
-    this.possibleMoves = this.chessService.getPossibleMoves(this.game, row, col);
+    this.selectedPiece = square;
+    this.possibleMoves = this.chessService.getPossibleMoves(this.game, square.row, square.col);
     this.draggedPiece = event.target as HTMLElement;
     this.initialPosition = { x: event.clientX, y: event.clientY };
     this.draggedPiece.style.position = 'absolute';
@@ -72,27 +70,9 @@ export class ChessboardComponent implements OnInit {
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
     if (this.dragging && this.draggedPiece && this.selectedPiece) {
-      // const square = this.getSquareFromCoordinates(event.clientX, event.clientY); <- Removed because we don't need coordinate calculations anymore
-      // if (square && this.isPossibleMove(square.row, square.col)) { <- Removed because we don't need coordinate calculations anymore
-      //   const move = { from: this.getAlgebraicNotation(this.selectedPiece.row, this.selectedPiece.col), to: this.getAlgebraicNotation(square.row, square.col) }; <- Removed because we don't need coordinate calculations anymore
-      //   if (this.game.move(move)) { <- Removed because we don't need coordinate calculations anymore
-      //     this.updateBoard();
-      //     this.centerPiece(square.row, square.col);
-      //   }
-      // }
       this.resetDrag();
     }
   }
-
-  // getSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null { <- Removed because we don't need coordinate calculations anymore
-  //   const rect = this.boardContainer.nativeElement.getBoundingClientRect();
-  //   const col = Math.floor((x - rect.left) / this.squareSize);
-  //   const row = Math.floor((y - rect.top) / this.squareSize);
-  //   if (col >= 0 && col < 8 && row >= 0 && row < 8) {
-  //     return { row, col };
-  //   }
-  //   return null;
-  // }
 
   getAlgebraicNotation(row: number, col: number): string {
     const colName = String.fromCharCode(97 + col);
@@ -109,12 +89,4 @@ export class ChessboardComponent implements OnInit {
     this.selectedPiece = null;
     this.possibleMoves = [];
   }
-
-  // centerPiece(row: number, col: number) { <- Removed because we don't need this anymore
-  //   const piece = document.querySelector(`.square:nth-child(${row * 8 + col + 1}) img`) as HTMLElement;
-  //   if (piece) {
-  //     piece.style.left = `calc(50% - ${piece.offsetWidth / 2}px)`;
-  //     piece.style.top = `calc(50% - ${piece.offsetHeight / 2}px)`;
-  //   }
-  // }
 }
