@@ -1,13 +1,13 @@
 <div class="board">
-  <table class="w-64 h-64">
-    <tr *ngFor="let row of board; let i = index">
-      <td *ngFor="let piece of row; let j = index"
-          [class.bg-yellow-200]="(i + j) % 2 === 0"
-          [class.bg-brown-500]="(i + j) % 2 !== 0"
-          class="border border-gray-300 w-8 h-8 flex items-center justify-center"
-          (mousedown)="onPieceMouseDown($event, i, j, piece)">
-        <img *ngIf="piece" [src]="getPieceImage(piece)" alt="{{ piece }}" class="w-6 h-6">
-      </td>
-    </tr>
-  </table>
+  <div class="grid grid-cols-8 grid-rows-8 gap-0 w-64 h-64">
+    <div *ngFor="let row of board; let i = index"
+         *ngFor="let piece of row; let j = index"
+         [class.bg-yellow-200]="(i + j) % 2 === 0"
+         [class.bg-brown-500]="(i + j) % 2 !== 0"
+         class="border border-gray-300 flex items-center justify-center"
+         (mousedown)="onPieceMouseDown($event, i, j, piece)">
+      <img *ngIf="piece" [src]="getPieceImage(piece)" alt="{{ piece }}" class="w-6 h-6">
+    </div>
+  </div>
 </div>
+
