@@ -46,6 +46,6 @@ export class ChessboardComponent implements OnInit {
   getPieceImage(piece: string): string {
     const color = piece[0];
     const type = piece[1].toUpperCase();
-    return `/assets/img/chesspieces/${color}${type}.png`;
+    return `assets/img/chesspiece/${color}${type}.png`;
   }
 }
