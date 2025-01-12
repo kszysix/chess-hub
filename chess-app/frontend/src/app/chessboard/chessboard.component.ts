@@ -1,4 +1,4 @@
-import { Component, OnInit, standalone } from '@angular/core'; //Import standalone
+import { Component, OnInit } from '@angular/core'; 
 import * as Chess from 'chess.js';
 
 @Component({
@@ -22,5 +22,8 @@ import * as Chess from 'chess.js';
   standalone: true // Add standalone: true
 })
 export class ChessboardComponent implements OnInit {
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
   // ... rest of the component code ...
 }
