@@ -111,7 +111,7 @@ export class ChessboardComponent implements OnInit {
   }
 
   centerPiece(row: number, col: number) {
-    const piece = document.querySelector(`.square:nth-child(${row * 8 + col + 1}) img`);
+    const piece = document.querySelector(`.square:nth-child(${row * 8 + col + 1}) img`) as HTMLElement; // Type assertion here
     if (piece) {
       piece.style.left = `calc(50% - ${piece.offsetWidth / 2}px)`;
       piece.style.top = `calc(50% - ${piece.offsetHeight / 2}px)`;
