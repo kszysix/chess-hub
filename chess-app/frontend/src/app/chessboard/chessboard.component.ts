@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core';
 import * as Chess from 'chess.js';
 
 @Component({
@@ -11,6 +11,7 @@ import * as Chess from 'chess.js';
       text-align: center;
       font-size: 30px;
       line-height: 50px;
+      border: 1px solid black; /* Added border for better visibility */
     }
     .white {
       background-color: #f0d9b5;
@@ -19,11 +20,27 @@ import * as Chess from 'chess.js';
       background-color: #b58863;
     }
   `],
-  standalone: true // Add standalone: true
+  standalone: true
 })
 export class ChessboardComponent implements OnInit {
+  game: Chess.ChessInstance;
+  board: string[][] = [];
+
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.game = new Chess();
+    this.updateBoard();
   }
-  // ... rest of the component code ...
+
+  updateBoard() {
+    this.board = [];
+    for (let i = 0; i < 8; i++) {
+      const row = [];
+      for (let j = 0; j < 8; j++) {
+        const square = Chess.SQUARES[8 * i + j];
+        const piece = this.game.get(square);
+        row.push(piece ? piece.type + piece.color[0] : '');
+      }
+      this.board.push(row);
+    }
+  }
 }
