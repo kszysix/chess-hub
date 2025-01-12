@@ -1,6 +1,6 @@
 <div class="board board-container" #board>
   <div class="grid grid-cols-8 grid-rows-8 gap-0 w-64 h-64">
-    <div *ngFor="let square of board; let i = index"
+    <div *ngFor="let square of boardInstance; let i = index"  <!-- Corrected line -->
          [class.bg-yellow-200]="(square.row + square.col) % 2 === 0"
          [class.bg-brown-500]="(square.row + square.col) % 2 !== 0"
          class="border border-gray-300 flex items-center justify-center relative"
@@ -9,3 +9,4 @@
     </div>
   </div>
 </div>
+
