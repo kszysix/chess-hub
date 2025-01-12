@@ -25,7 +25,7 @@ import * as ChessJS from 'chess.js';
   imports: [CommonModule] // Add CommonModule to imports
 })
 export class ChessboardComponent implements OnInit {
-  game: ChessJS.ChessInstance = new ChessJS.Chess();
+  game: ChessJS.Chess = new ChessJS.Chess();
   board: string[][] = [];
 
   ngOnInit(): void {
