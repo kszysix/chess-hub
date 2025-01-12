@@ -10,7 +10,7 @@ import { ChessService } from '../services/chess.service';
   imports: [CommonModule],
 })
 export class ChessboardComponent implements OnInit {
-  @ViewChild('boardCss') boardContainer!: ElementRef;
+  @ViewChild('board') boardContainer!: ElementRef;
 
   game: ChessJS.Chess = new ChessJS.Chess();
   board: { row: number; col: number; piece: string }[] = [];
@@ -20,6 +20,8 @@ export class ChessboardComponent implements OnInit {
   draggedPiece: HTMLElement | null = null;
   initialPosition: { x: number; y: number } | null = null;
   squareSize: number = 0;
+  initialPiecePosition: { left: string; top: string } | null = null;
+
 
   constructor(private chessService: ChessService) {}
 
@@ -60,6 +62,7 @@ export class ChessboardComponent implements OnInit {
     this.possibleMoves = this.chessService.getPossibleMoves(this.game, square.row, square.col);
     this.draggedPiece = event.target as HTMLElement;
     this.initialPosition = { x: event.clientX, y: event.clientY };
+    this.initialPiecePosition = {left: this.draggedPiece.style.left, top: this.draggedPiece.style.top};
     this.draggedPiece.style.position = 'absolute';
     this.draggedPiece.style.zIndex = '10';
   }
@@ -69,8 +72,8 @@ export class ChessboardComponent implements OnInit {
     if (this.dragging && this.draggedPiece) {
       const deltaX = event.clientX - this.initialPosition!.x;
       const deltaY = event.clientY - this.initialPosition!.y;
-      this.draggedPiece.style.left = `${deltaX}px`;
-      this.draggedPiece.style.top = `${deltaY}px`;
+      this.draggedPiece.style.left = `${parseInt(this.initialPiecePosition!.left) + deltaX}px`;
+      this.draggedPiece.style.top = `${parseInt(this.initialPiecePosition!.top) + deltaY}px`;
     }
   }
 
@@ -112,5 +115,11 @@ export class ChessboardComponent implements OnInit {
     this.draggedPiece = null;
     this.selectedPiece = null;
     this.possibleMoves = [];
+    if (this.draggedPiece) {
+        this.draggedPiece.style.position = 'relative';
+        this.draggedPiece.style.zIndex = '0';
+        this.draggedPiece.style.left = '0';
+        this.draggedPiece.style.top = '0';
+    }
   }
 }

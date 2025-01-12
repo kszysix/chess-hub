@@ -1,9 +1,9 @@
-<div class="board" #boardCss>
+<div class="board" #board>
   <div class="grid grid-cols-8 grid-rows-8 gap-0 w-64 h-64">
     <div *ngFor="let square of board; let i = index"
          [class.bg-yellow-200]="(square.row + square.col) % 2 === 0"
          [class.bg-brown-500]="(square.row + square.col) % 2 !== 0"
-         class="border border-gray-300 flex items-center justify-center"
+         class="border border-gray-300 flex items-center justify-center relative"
          (mousedown)="onPieceMouseDown($event, square)">
       <img *ngIf="square.piece" [src]="getPieceImage(square.piece)" alt="{{ square.piece }}" class="w-6 h-6">
     </div>
