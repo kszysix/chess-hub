@@ -8,10 +8,10 @@ import { ChessService } from '../services/chess.service';
   templateUrl: './chessboard.component.html',
   standalone: true,
   imports: [CommonModule],
-  styleUrls: ['./chessboard.component.css']
+  // styleUrls: ['./chessboard.component.css']  <- Removed because we're using Tailwind
 })
 export class ChessboardComponent implements OnInit {
-  @ViewChild('boardCss') boardContainer!: ElementRef;
+  // @ViewChild('boardCss') boardContainer!: ElementRef; <- Removed because we're not using this anymore
 
   game: ChessJS.Chess = new ChessJS.Chess();
   board: string[][] = [];
@@ -29,9 +29,9 @@ export class ChessboardComponent implements OnInit {
     this.updateBoard();
   }
 
-  ngAfterViewInit() {
-    this.squareSize = this.boardContainer.nativeElement.offsetWidth / 8;
-  }
+  // ngAfterViewInit() { <- Removed because we're not using this anymore
+  //   this.squareSize = this.boardContainer.nativeElement.offsetWidth / 8;
+  // }
 
   updateBoard() {
     this.board = this.game.board().map(row => row.map(piece => this.getPieceCode(piece)));
@@ -72,27 +72,27 @@ export class ChessboardComponent implements OnInit {
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
     if (this.dragging && this.draggedPiece && this.selectedPiece) {
-      const square = this.getSquareFromCoordinates(event.clientX, event.clientY);
-      if (square && this.isPossibleMove(square.row, square.col)) {
-        const move = { from: this.getAlgebraicNotation(this.selectedPiece.row, this.selectedPiece.col), to: this.getAlgebraicNotation(square.row, square.col) };
-        if (this.game.move(move)) {
-          this.updateBoard();
-          this.centerPiece(square.row, square.col);
-        }
-      }
+      // const square = this.getSquareFromCoordinates(event.clientX, event.clientY); <- Removed because we don't need coordinate calculations anymore
+      // if (square && this.isPossibleMove(square.row, square.col)) { <- Removed because we don't need coordinate calculations anymore
+      //   const move = { from: this.getAlgebraicNotation(this.selectedPiece.row, this.selectedPiece.col), to: this.getAlgebraicNotation(square.row, square.col) }; <- Removed because we don't need coordinate calculations anymore
+      //   if (this.game.move(move)) { <- Removed because we don't need coordinate calculations anymore
+      //     this.updateBoard();
+      //     this.centerPiece(square.row, square.col);
+      //   }
+      // }
       this.resetDrag();
     }
   }
 
-  getSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
-    const rect = this.boardContainer.nativeElement.getBoundingClientRect();
-    const col = Math.floor((x - rect.left) / this.squareSize);
-    const row = Math.floor((y - rect.top) / this.squareSize);
-    if (col >= 0 && col < 8 && row >= 0 && row < 8) {
-      return { row, col };
-    }
-    return null;
-  }
+  // getSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null { <- Removed because we don't need coordinate calculations anymore
+  //   const rect = this.boardContainer.nativeElement.getBoundingClientRect();
+  //   const col = Math.floor((x - rect.left) / this.squareSize);
+  //   const row = Math.floor((y - rect.top) / this.squareSize);
+  //   if (col >= 0 && col < 8 && row >= 0 && row < 8) {
+  //     return { row, col };
+  //   }
+  //   return null;
+  // }
 
   getAlgebraicNotation(row: number, col: number): string {
     const colName = String.fromCharCode(97 + col);
@@ -110,11 +110,11 @@ export class ChessboardComponent implements OnInit {
     this.possibleMoves = [];
   }
 
-  centerPiece(row: number, col: number) {
-    const piece = document.querySelector(`.square:nth-child(${row * 8 + col + 1}) img`) as HTMLElement; // Type assertion here
-    if (piece) {
-      piece.style.left = `calc(50% - ${piece.offsetWidth / 2}px)`;
-      piece.style.top = `calc(50% - ${piece.offsetHeight / 2}px)`;
-    }
-  }
+  // centerPiece(row: number, col: number) { <- Removed because we don't need this anymore
+  //   const piece = document.querySelector(`.square:nth-child(${row * 8 + col + 1}) img`) as HTMLElement;
+  //   if (piece) {
+  //     piece.style.left = `calc(50% - ${piece.offsetWidth / 2}px)`;
+  //     piece.style.top = `calc(50% - ${piece.offsetHeight / 2}px)`;
+  //   }
+  // }
 }
