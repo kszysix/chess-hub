@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as Chess from 'chess.js';
+import {Chess } from 'chess.js';
+import * as ChessJS from 'chess.js';
 
 @Component({
   selector: 'app-chessboard',
@@ -23,11 +24,10 @@ import * as Chess from 'chess.js';
   standalone: true
 })
 export class ChessboardComponent implements OnInit {
-  game: Chess.ChessInstance;
+  game: Chess = new Chess
   board: string[][] = [];
 
   ngOnInit(): void {
-    this.game = new Chess();
     this.updateBoard();
   }
 
@@ -36,7 +36,7 @@ export class ChessboardComponent implements OnInit {
     for (let i = 0; i < 8; i++) {
       const row = [];
       for (let j = 0; j < 8; j++) {
-        const square = Chess.SQUARES[8 * i + j];
+        const square = ChessJS.SQUARES[8 * i + j];
         const piece = this.game.get(square);
         row.push(piece ? piece.type + piece.color[0] : '');
       }
