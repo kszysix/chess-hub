@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as ChessJS from 'chess.js';
 import { ChessService } from '../services/chess.service';
@@ -11,8 +11,6 @@ import { ChessService } from '../services/chess.service';
   styleUrls: ['./chessboard.component.css']
 })
 export class ChessboardComponent implements OnInit {
-  @ViewChild('board') boardContainer!: ElementRef;
-
   game: ChessJS.Chess = new ChessJS.Chess();
   board: string[][] = [];
   selectedPiece: { row: number; col: number; piece: string } | null = null;
@@ -79,10 +77,11 @@ export class ChessboardComponent implements OnInit {
   }
 
   getSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
-    const rect = this.boardContainer.nativeElement.getBoundingClientRect();
-    const squareSize = rect.width / 8;
-    const col = Math.floor((x - rect.left) / squareSize);
-    const row = Math.floor((y - rect.top) / squareSize);
+    const boardRect = document.querySelector('.board')?.getBoundingClientRect();
+    if (!boardRect) return null;
+    const squareSize = boardRect.width / 8;
+    const col = Math.floor((x - boardRect.left) / squareSize);
+    const row = Math.floor((y - boardRect.top) / squareSize);
     if (col >= 0 && col < 8 && row >= 0 && row < 8) {
       return { row, col };
     }
@@ -105,4 +104,3 @@ export class ChessboardComponent implements OnInit {
     this.possibleMoves = [];
   }
 }
-
