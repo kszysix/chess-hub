@@ -13,7 +13,7 @@ export class ChessboardComponent implements OnInit {
   @ViewChild('board') boardContainer!: ElementRef;
 
   game: ChessJS.Chess = new ChessJS.Chess();
-  board: { row: number; col: number; piece: string }[] = [];
+  boardInstance: { row: number; col: number; piece: string }[] = []; // Renamed board to boardInstance
   selectedPiece: { row: number; col: number; piece: string } | null = null;
   possibleMoves: { row: number; col: number }[] = [];
   dragging: boolean = false;
@@ -34,12 +34,12 @@ export class ChessboardComponent implements OnInit {
   }
 
   updateBoard() {
-    this.board = [];
+    this.boardInstance = []; // Update to use boardInstance
     const gameBoard = this.game.board();
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         const piece = gameBoard[i][j];
-        this.board.push({ row: i, col: j, piece: this.getPieceCode(piece) });
+        this.boardInstance.push({ row: i, col: j, piece: this.getPieceCode(piece) }); // Update to use boardInstance
       }
     }
     this.possibleMoves = [];
