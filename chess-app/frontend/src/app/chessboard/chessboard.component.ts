@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Chess } from 'chess.js';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 import * as ChessJS from 'chess.js';
 
 @Component({
@@ -12,7 +12,7 @@ import * as ChessJS from 'chess.js';
       text-align: center;
       font-size: 30px;
       line-height: 50px;
-      border: 1px solid black; /* Added border for better visibility */
+      border: 1px solid black;
     }
     .white {
       background-color: #f0d9b5;
@@ -21,10 +21,11 @@ import * as ChessJS from 'chess.js';
       background-color: #b58863;
     }
   `],
-  standalone: true
+  standalone: true,
+  imports: [CommonModule] // Add CommonModule to imports
 })
 export class ChessboardComponent implements OnInit {
-  game: Chess = new Chess
+  game: ChessJS.ChessInstance = new ChessJS.Chess();
   board: string[][] = [];
 
   ngOnInit(): void {
