@@ -70,9 +70,29 @@ export class ChessboardComponent implements OnInit {
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: MouseEvent) {
     if (this.dragging && this.draggedPiece && this.selectedPiece) {
+      const newSquare = this.findSquareFromCoordinates(event.clientX, event.clientY);
+      if (newSquare && this.isPossibleMove(newSquare.row, newSquare.col)) {
+        const move = { from: this.getAlgebraicNotation(this.selectedPiece.row, this.selectedPiece.col), to: this.getAlgebraicNotation(newSquare.row, newSquare.col) };
+        if (this.game.move(move)) {
+          this.updateBoard();
+        }
+      }
       this.resetDrag();
     }
   }
+
+  findSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
+    // Implement logic to find the square based on coordinates.  This will depend on your board layout and size.
+    // This is a placeholder, replace with your actual logic.
+    const squareSize = 64 / 8; // Assuming 64px board
+    const col = Math.floor(x / squareSize);
+    const row = Math.floor(y / squareSize);
+    if (col >= 0 && col < 8 && row >= 0 && row < 8) {
+      return { row, col };
+    }
+    return null;
+  }
+
 
   getAlgebraicNotation(row: number, col: number): string {
     const colName = String.fromCharCode(97 + col);
