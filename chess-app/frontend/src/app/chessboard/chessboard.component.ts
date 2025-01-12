@@ -77,7 +77,7 @@ export class ChessboardComponent implements OnInit {
   }
 
   getSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
-    const boardRect = document.querySelector('.board')?.getBoundingClientRect();
+    const boardRect = document.querySelector('.boardCss')?.getBoundingClientRect();
     if (!boardRect) return null;
     const squareSize = boardRect.width / 8;
     const col = Math.floor((x - boardRect.left) / squareSize);
