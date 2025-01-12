@@ -13,7 +13,7 @@ export class ChessboardComponent implements OnInit {
   @ViewChild('board') boardContainer!: ElementRef;
 
   game: ChessJS.Chess = new ChessJS.Chess();
-  boardInstance: { row: number; col: number; piece: string }[] = []; // Renamed board to boardInstance
+  boardInstance: { row: number; col: number; piece: string }[] = [];
   selectedPiece: { row: number; col: number; piece: string } | null = null;
   possibleMoves: { row: number; col: number }[] = [];
   dragging: boolean = false;
@@ -34,12 +34,12 @@ export class ChessboardComponent implements OnInit {
   }
 
   updateBoard() {
-    this.boardInstance = []; // Update to use boardInstance
+    this.boardInstance = [];
     const gameBoard = this.game.board();
     for (let i = 0; i < 8; i++) {
       for (let j = 0; j < 8; j++) {
         const piece = gameBoard[i][j];
-        this.boardInstance.push({ row: i, col: j, piece: this.getPieceCode(piece) }); // Update to use boardInstance
+        this.boardInstance.push({ row: i, col: j, piece: this.getPieceCode(piece) });
       }
     }
     this.possibleMoves = [];
@@ -112,14 +112,14 @@ export class ChessboardComponent implements OnInit {
 
   resetDrag() {
     this.dragging = false;
-    this.draggedPiece = null;
     this.selectedPiece = null;
     this.possibleMoves = [];
-    if (this.draggedPiece) {
-        this.draggedPiece.style.position = 'relative';
-        this.draggedPiece.style.zIndex = '0';
-        this.draggedPiece.style.left = '0';
-        this.draggedPiece.style.top = '0';
+    if (this.draggedPiece) { // Add null check here
+      this.draggedPiece.style.position = 'relative';
+      this.draggedPiece.style.zIndex = '0';
+      this.draggedPiece.style.left = '0';
+      this.draggedPiece.style.top = '0';
     }
+    this.draggedPiece = null; //Added this line to explicitly set draggedPiece to null
   }
 }
