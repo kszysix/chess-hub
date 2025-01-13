@@ -1,6 +1,6 @@
 <div #board class="chessboard" [style.width.px]="config.size" [style.height.px]="config.size">
   <div class="board" [style.transform]="rotated ? 'rotate(180deg)' : 'none'">
-    <div *ngFor="let row of board; let rowIndex = index" class="row">
+    <div *ngFor="let row of boardInstance; let rowIndex = index" class="row">
       <div *ngFor="let square of row; let colIndex = index" class="square"
            [class.light]="(rowIndex + colIndex) % 2 === 0"
            [class.dark]="(rowIndex + colIndex) % 2 !== 0"

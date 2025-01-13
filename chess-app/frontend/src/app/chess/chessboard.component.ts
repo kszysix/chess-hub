@@ -26,7 +26,7 @@ export class ChessboardComponent implements OnInit {
   };
 
   game: ChessJS.Chess = new ChessJS.Chess();
-  board: { row: number; col: number; piece: string | null }[][] = [];
+  boardInstance: { row: number; col: number; piece: string | null }[][] = [];
   squareSize: number = 0;
   selectedPiece: { row: number; col: number; piece: string } | null = null;
   initialPosition: { x: number; y: number } | null = null;
@@ -43,7 +43,7 @@ export class ChessboardComponent implements OnInit {
   }
 
   updateBoard(): void {
-    this.board = this.game.board().map((row, rowIndex) =>
+    this.boardInstance = this.game.board().map((row, rowIndex) =>
       row.map((piece, colIndex) => ({
         row: rowIndex,
         col: colIndex,
