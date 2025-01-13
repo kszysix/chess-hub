@@ -32,6 +32,7 @@ export class ChessboardComponent implements OnInit {
   initialPosition: { x: number; y: number } | null = null;
   draggedPiece: HTMLElement | null = null;
   possibleMoves: { row: number; col: number }[] = [];
+  dragging: boolean = false; // Changed to a regular property
 
   ngOnInit(): void {
     this.game.load(this.config.startingFen);
@@ -57,6 +58,7 @@ export class ChessboardComponent implements OnInit {
   }
 
   onPieceMouseDown(event: MouseEvent, square: { row: number; col: number; piece: string | null }): void {
+    this.dragging = true; // Assign to dragging property
     if (!square.piece) return;
     this.selectedPiece = { ...square, piece: square.piece };
     this.initialPosition = { x: event.clientX, y: event.clientY };
@@ -81,6 +83,7 @@ export class ChessboardComponent implements OnInit {
 
   @HostListener('document:mouseup', ['$event'])
   onMouseUp(event: MouseEvent): void {
+    this.dragging = false; // Assign to dragging property
     if (this.dragging && this.draggedPiece && this.selectedPiece) {
       const newSquare = this.findSquareFromCoordinates(event.clientX, event.clientY);
       if (newSquare) {
@@ -113,7 +116,7 @@ export class ChessboardComponent implements OnInit {
   }
 
   resetDrag(): void {
-    this.dragging = false;
+    this.dragging = false; // Assign to dragging property
     this.selectedPiece = null;
     this.possibleMoves = [];
     if (this.draggedPiece) {
@@ -123,10 +126,6 @@ export class ChessboardComponent implements OnInit {
       this.draggedPiece.style.top = '0';
     }
     this.draggedPiece = null;
-  }
-
-  get dragging(): boolean {
-    return this.selectedPiece !== null;
   }
 
   get isWhiteTurn(): boolean {
