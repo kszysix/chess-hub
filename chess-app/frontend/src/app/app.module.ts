@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { ChessboardComponent } from './chessboard/chessboard.component';
+import { ChessboardComponent2 } from './chess/chessboard.component';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ChessboardComponent } from './chessboard/chessboard.component';
     BrowserModule,
     ChessboardComponent, // Import ChessboardComponent here
     AppComponent,
-    CommonModule
+    CommonModule,
+    ChessboardComponent2
   ],
   providers: [],
   bootstrap: []

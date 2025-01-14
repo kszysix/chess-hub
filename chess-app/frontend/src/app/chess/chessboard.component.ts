@@ -31,6 +31,7 @@ interface BoardConfig {
                  [style.width.px]="squareSize"
                  [style.height.px]="squareSize"
                  [attr.data-piece]="board[getSquareName(rowIndex, colIndex)]"
+                 [style.transform]="pieceRotation"
                  />
           </div>
         </div>
@@ -59,6 +60,7 @@ export class ChessboardComponent2 implements AfterViewInit, OnDestroy {
   chess = new Chess();
   draggedPiece: { piece: string, from: string } | null = null;
   boardRotation: string = '';
+  pieceRotation: string = '';
   currentPlayer: 'w' | 'b' = 'w';
 
   ngAfterViewInit(): void {
@@ -97,7 +99,7 @@ export class ChessboardComponent2 implements AfterViewInit, OnDestroy {
   }
 
   getPieceImage(piece: string): string {
-    return `assets/pieces/${piece}.png`;
+    return `assets/img/chesspiece/${piece}.png`;
   }
 
   allowDrop(event: any) {
@@ -166,8 +168,10 @@ export class ChessboardComponent2 implements AfterViewInit, OnDestroy {
   updateBoardRotation() {
     if (this.config.mode === 'game') {
       this.boardRotation = this.currentPlayer === 'w' ? 'rotate(0deg)' : 'rotate(180deg)';
+      this.pieceRotation = this.currentPlayer === 'w' ? 'rotate(0deg)' : 'rotate(180deg)';
     } else {
       this.boardRotation = this.config.orientation === 'white' ? 'rotate(0deg)' : 'rotate(180deg)';
+      this.pieceRotation = this.config.orientation === 'white' ? 'rotate(0deg)' : 'rotate(180deg)';
     }
   }
 
