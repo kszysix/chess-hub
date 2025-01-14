@@ -1,138 +1,176 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, AfterViewInit, ElementRef, ViewChild, OnDestroy, HostListener } from '@angular/core';
+import { Chess, Square, Move, PieceSymbol } from 'chess.js';
 import { CommonModule } from '@angular/common';
-import * as ChessJS from 'chess.js';
 
-interface ChessboardConfig {
+interface BoardConfig {
   size: number;
   orientation: 'white' | 'black';
-  startingFen: string;
-  mode: 'game' | 'edit';
+  fen: string;
+  mode: 'game' | 'analysis';
 }
 
 @Component({
-  selector: 'app-chessboard',
-  templateUrl: './chessboard.component.html',
-  standalone: true,
-  imports: [CommonModule],
+  selector: 'app-chessboard2',
+  template: `
+    <div #chessboardContainer class="chessboard-container" [style.width.px]="config.size" [style.height.px]="config.size">
+      <div #chessboard class="chessboard" [style.transform]="boardRotation">
+        <div *ngFor="let row of rows; let rowIndex = index" class="board-row">
+          <div *ngFor="let col of cols; let colIndex = index"
+               class="board-square"
+               [class.light]="(rowIndex + colIndex) % 2 === 0"
+               [class.dark]="(rowIndex + colIndex) % 2 !== 0"
+               [attr.data-square]="getSquareName(rowIndex, colIndex)"
+               (dragover)="allowDrop($event)"
+               (drop)="drop($event, getSquareName(rowIndex, colIndex))"
+               >
+            <img *ngIf="board[getSquareName(rowIndex, colIndex)]"
+                 [src]="getPieceImage(board[getSquareName(rowIndex, colIndex)])"
+                 draggable="true"
+                 (dragstart)="drag($event, getSquareName(rowIndex, colIndex))"
+                 class="chess-piece"
+                 [style.width.px]="squareSize"
+                 [style.height.px]="squareSize"
+                 [attr.data-piece]="board[getSquareName(rowIndex, colIndex)]"
+                 />
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styleUrls: ['./chessboard.component.css']
 })
-export class ChessboardComponent implements OnInit {
-  @ViewChild('board') boardContainer!: ElementRef;
-
-  config: ChessboardConfig = {
+export class ChessboardComponent2 implements AfterViewInit, OnDestroy {
+  @Input() config: BoardConfig = {
     size: 400,
     orientation: 'white',
-    startingFen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    mode: 'game',
+    fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    mode: 'game'
   };
 
-  game: ChessJS.Chess = new ChessJS.Chess();
-  boardInstance: { row: number; col: number; piece: string | null }[][] = [];
-  squareSize: number = 0;
-  selectedPiece: { row: number; col: number; piece: string } | null = null;
-  initialPosition: { x: number; y: number } | null = null;
-  draggedPiece: HTMLElement | null = null;
-  possibleMoves: { row: number; col: number }[] = [];
-  dragging: boolean = false; // Changed to a regular property
+  @ViewChild('chessboardContainer', { static: true }) chessboardContainer!: ElementRef;
+  @ViewChild('chessboard', { static: true }) chessboard!: ElementRef;
 
-  ngOnInit(): void {
-    this.game.load(this.config.startingFen);
+  rows = [0, 1, 2, 3, 4, 5, 6, 7];
+  cols = [0, 1, 2, 3, 4, 5, 6, 7];
+  board: { [key: string]: string } = {};
+  squareSize: number = 0;
+  chess = new Chess();
+  draggedPiece: { piece: string, from: string } | null = null;
+  boardRotation: string = '';
+  currentPlayer: 'w' | 'b' = 'w';
+
+  ngAfterViewInit(): void {
+    this.squareSize = this.config.size / 8;
+    this.loadFen();
+    this.updateBoardRotation();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup if needed
+  }
+
+  loadFen() {
+    this.chess.load(this.config.fen);
     this.updateBoard();
   }
 
-  ngAfterViewInit(): void {
-    this.squareSize = this.boardContainer.nativeElement.offsetWidth / 8;
-  }
-
-  updateBoard(): void {
-    this.boardInstance = this.game.board().map((row, rowIndex) =>
-      row.map((piece, colIndex) => ({
-        row: rowIndex,
-        col: colIndex,
-        piece: piece ? `${piece.color}${piece.type.toUpperCase()}` : null,
-      }))
-    );
-  }
-
-  getPieceImage(piece: string | null): string {
-    return piece ? `assets/img/chesspiece/${piece}.png` : '';
-  }
-
-  onPieceMouseDown(event: MouseEvent, square: { row: number; col: number; piece: string | null }): void {
-    this.dragging = true; // Assign to dragging property
-    if (!square.piece) return;
-    this.selectedPiece = { ...square, piece: square.piece };
-    this.initialPosition = { x: event.clientX, y: event.clientY };
-    this.draggedPiece = event.target as HTMLElement;
-    this.draggedPiece.style.position = 'absolute';
-    this.draggedPiece.style.zIndex = '10';
-    this.possibleMoves = this.game.moves({ verbose: true }).map((move) => ({
-      row: 8 - parseInt(move.to.slice(1)),
-      col: move.to.charCodeAt(0) - 97,
-    }));
-  }
-
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent): void {
-    if (this.dragging && this.draggedPiece) {
-      const deltaX = event.clientX - this.initialPosition!.x;
-      const deltaY = event.clientY - this.initialPosition!.y;
-      this.draggedPiece.style.left = `${parseInt(this.draggedPiece.style.left || '0') + deltaX}px`;
-      this.draggedPiece.style.top = `${parseInt(this.draggedPiece.style.top || '0') + deltaY}px`;
-    }
-  }
-
-  @HostListener('document:mouseup', ['$event'])
-  onMouseUp(event: MouseEvent): void {
-    this.dragging = false; // Assign to dragging property
-    if (this.dragging && this.draggedPiece && this.selectedPiece) {
-      const newSquare = this.findSquareFromCoordinates(event.clientX, event.clientY);
-      if (newSquare) {
-        this.makeMove(this.selectedPiece.row, this.selectedPiece.col, newSquare.row, newSquare.col);
+  updateBoard() {
+    this.board = {};
+    const fenBoard = this.chess.board();
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        const squareName = this.getSquareName(row, col);
+        const piece = fenBoard[row][col];
+        if (piece) {
+          this.board[squareName] = piece.color + piece.type.toUpperCase();
+        }
       }
-      this.resetDrag();
     }
   }
 
-  makeMove(fromRow: number, fromCol: number, toRow: number, toCol: number): void {
-    const move = {
-      from: `${String.fromCharCode(97 + fromCol)}${8 - fromRow}`,
-      to: `${String.fromCharCode(97 + toCol)}${8 - toRow}`,
-    };
-    if (this.game.move(move)) {
-      this.updateBoard();
-      if (this.config.mode === 'game') {
-        this.game.turn() === 'w' ? (this.config.orientation = 'white') : (this.config.orientation = 'black');
+  getSquareName(row: number, col: number): string {
+    const files = 'abcdefgh';
+    const ranks = '87654321';
+    return files[col] + ranks[row];
+  }
+
+  getPieceImage(piece: string): string {
+    return `assets/pieces/${piece}.png`;
+  }
+
+  allowDrop(event: any) {
+    event.preventDefault();
+  }
+
+  drag(event: any, from: string) {
+    this.draggedPiece = { piece: event.target.dataset['piece'], from };
+    event.dataTransfer.setData('text', event.target.dataset['piece']);
+  }
+
+  createMoveObject(from: Square, to: Square): Move {
+    const piece = this.chess.get(from);
+    if (!piece) {
+      throw new Error(`No piece found at ${from}`);
+    }
+    return {
+      from,
+      to,
+      promotion: 'q',
+      piece: piece.type as PieceSymbol,
+      color: piece.color,
+    } as Move;
+  }
+
+  drop(event: any, to: string) {
+    event.preventDefault();
+    if (!this.draggedPiece) return;
+
+    const from = this.draggedPiece.from as Square;
+    const piece = this.draggedPiece.piece;
+    this.draggedPiece = null;
+
+    if (from === to) {
+      return;
+    }
+    const toSq = to as Square
+    if (this.config.mode === 'game') {
+      
+      const move = this.createMoveObject(from, toSq);
+      if (this.chess.move(move)) {
+        this.updateBoard();
+        this.switchPlayer();
+        this.updateBoardRotation();
+      } else {
+        this.resetPiecePosition(event, from);
       }
     } else {
-      this.resetDrag();
+      const move = this.createMoveObject(from, toSq);
+      this.updateBoard();
     }
   }
 
-  findSquareFromCoordinates(x: number, y: number): { row: number; col: number } | null {
-    const boardRect = this.boardContainer.nativeElement.getBoundingClientRect();
-    const col = Math.floor((x - boardRect.left) / this.squareSize);
-    const row = Math.floor((y - boardRect.top) / this.squareSize);
-    return col >= 0 && col < 8 && row >= 0 && row < 8 ? { row, col } : null;
-  }
-
-  resetDrag(): void {
-    this.dragging = false; // Assign to dragging property
-    this.selectedPiece = null;
-    this.possibleMoves = [];
-    if (this.draggedPiece) {
-      this.draggedPiece.style.position = 'relative';
-      this.draggedPiece.style.zIndex = '0';
-      this.draggedPiece.style.left = '0';
-      this.draggedPiece.style.top = '0';
+  resetPiecePosition(event: any, from: string) {
+    const fromSquareElement = this.chessboard.nativeElement.querySelector(`[data-square="${from}"]`);
+    const pieceElement = fromSquareElement.querySelector('img');
+    if (pieceElement) {
+      pieceElement.style.transform = 'translate(0,0)';
     }
-    this.draggedPiece = null;
   }
 
-  get isWhiteTurn(): boolean {
-    return this.game.turn() === 'w';
+  switchPlayer() {
+    this.currentPlayer = this.currentPlayer === 'w' ? 'b' : 'w';
   }
 
-  get rotated(): boolean {
-    return this.config.orientation === 'black';
+  updateBoardRotation() {
+    if (this.config.mode === 'game') {
+      this.boardRotation = this.currentPlayer === 'w' ? 'rotate(0deg)' : 'rotate(180deg)';
+    } else {
+      this.boardRotation = this.config.orientation === 'white' ? 'rotate(0deg)' : 'rotate(180deg)';
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.squareSize = this.config.size / 8;
   }
 }
