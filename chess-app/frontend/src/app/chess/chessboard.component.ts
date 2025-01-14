@@ -1,6 +1,6 @@
 import { Component, Input, AfterViewInit, ElementRef, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import { Chess, Square, Move, PieceSymbol } from 'chess.js';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common'; // Import CommonModule
 
 interface BoardConfig {
   size: number;
@@ -37,7 +37,9 @@ interface BoardConfig {
       </div>
     </div>
   `,
-  styleUrls: ['./chessboard.component.css']
+  styleUrls: ['./chessboard.component.css'],
+  standalone: true,
+  imports: [CommonModule] // Add CommonModule to imports
 })
 export class ChessboardComponent2 implements AfterViewInit, OnDestroy {
   @Input() config: BoardConfig = {
